@@ -1,5 +1,11 @@
+import logging
 from phonebook.app.services.phonebook_service import PhoneBookService
 from phonebook.utils.utils import error_reporter
+from phonebook.utils.logger import setup_logger  # Import logger setup
+
+# Setup loggers
+app_logger = setup_logger('app_logger', 'logs/app.log')
+audit_logger = setup_logger('audit_logger', 'logs/audit.log')
 
 
 @error_reporter
@@ -14,6 +20,7 @@ def main_menu():
     print("6. Exit")
     return input("Choose an option: ")
 
+
 @error_reporter
 def handle_add_contact(service):
     """Handle adding a new contact."""
@@ -25,24 +32,23 @@ def handle_add_contact(service):
     service.add_contact(first_name, last_name, phone, email, address)
     print("Contact added successfully.")
 
+    # Log the addition of the contact
+    app_logger.info(f"Added contact: {first_name} {last_name}, Phone: {phone}")
+
+
 @error_reporter
 def handle_view_contacts(service):
     """Handle viewing all contacts with pagination."""
     limit = 10  # Change this number if you want to see more contacts per page.
     offset = 0
     while True:
-        contacts = service.get_all_contacts(limit=limit, offset=offset)
-        if not contacts:
-            print("No more contacts to show.")
-            break
-        for contact in contacts:
-            print(contact)
-
+        service.get_all_contacts(limit=limit, offset=offset)
         next_page = input("Press 'n' for next page, or 'q' to quit: ").strip().lower()
         if next_page == 'n':
             offset += limit
         else:
             break
+
 
 @error_reporter
 def handle_search_contact(service):
@@ -52,8 +58,11 @@ def handle_search_contact(service):
     if results:
         for contact in results:
             print(contact)
+        app_logger.info(f"Search results for: {search_term}, Found {len(results)} contacts.")
     else:
         print("No matching contacts found.")
+        app_logger.info(f"No contacts found for search term: {search_term}")
+
 
 @error_reporter
 def handle_update_contact(service):
@@ -69,12 +78,20 @@ def handle_update_contact(service):
     service.update_contact(phone, first_name=first_name, last_name=last_name, email=email, address=address)
     print("Contact updated successfully.")
 
+    # Log the update
+    app_logger.info(f"Updated contact: Phone: {phone}, Changes: {fields}")
+
+
 @error_reporter
 def handle_delete_contact(service):
     """Handle deleting a contact by phone number."""
     phone = input("Enter phone number of the contact to delete: ").strip()
     service.delete_contact(phone)
     print("Contact deleted successfully.")
+
+    # Log the deletion
+    app_logger.info(f"Deleted contact with phone: {phone}")
+
 
 @error_reporter
 def main():
@@ -94,9 +111,12 @@ def main():
             handle_delete_contact(service)
         elif option == "6":
             print("Exiting Phone Book Manager.")
+            app_logger.info("Exited the Phone Book Manager.")
             break
         else:
             print("Invalid option, please choose a valid menu item.")
+            app_logger.warning(f"Invalid option selected: {option}")
+
 
 if __name__ == "__main__":
     main()
