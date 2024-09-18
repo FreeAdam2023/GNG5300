@@ -1,15 +1,15 @@
 from phonebook.data.crud import CrudOperations
+from phonebook.utils.utils import error_reporter  # Import the error reporter decorator
 
-
-class Contacts:
-
+class Contacts(CrudOperations):
     def __init__(self):
-        self.contacts = CrudOperations('contacts')
+        super().__init__('contacts')  # Initialize the CrudOperations with the 'contacts' table
         self.create_contacts_table()
 
+    @error_reporter
     def create_contacts_table(self):
         """
-        Create contacts table if it does not exist.
+        Create the contacts table if it does not exist.
         """
         query = '''
         CREATE TABLE IF NOT EXISTS contacts (
@@ -23,75 +23,29 @@ class Contacts:
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         '''
-        self.contacts.db.execute(query)
+        self.execute(query)  # Use `execute` directly since `Contacts` inherits from `CrudOperations`
 
-    def add_contact(self, first_name, last_name, phone, email=None, address=None):
-        """
-        Add a new contact to the table.
-        """
-        try:
-            self.contacts.add(first_name=first_name, last_name=last_name, phone=phone, email=email, address=address)
-        except Exception as e:
-            print(f"Error adding contact: {e}")
-
-    def update_contact(self, phone, **fields):
-        """
-        Update contact information based on phone number.
-        """
-        try:
-            self.contacts.update(where={'phone': phone}, **fields)
-        except Exception as e:
-            print(f"Error updating contact: {e}")
-
-    def delete_contact(self, phone):
-        """
-        Delete a contact by phone number.
-        """
-        try:
-            self.contacts.delete(phone=phone)
-        except Exception as e:
-            print(f"Error deleting contact: {e}")
-
+    @error_reporter
     def search_contact(self, search_term):
         """
         Search contacts by first name, last name, or phone number.
         """
-        return self.contacts.search(search_term)
+        where_clause = "first_name LIKE ? OR last_name LIKE ? OR phone LIKE ?"
+        search_value = f"%{search_term}%"
+        query = f"SELECT * FROM {self.table} WHERE {where_clause}"
+        return self.fetchall(query, (search_value, search_value, search_value))  # Use `fetchall` from `CrudOperations`
 
-    def get_all_contacts(self):
+    @error_reporter
+    def get_all_contacts(self, limit=10, offset=0):
         """
-        Retrieve all contacts from the table.
+        Retrieve paginated contacts from the table.
         """
-        return self.contacts.fetch_all()
+        return self.fetch_all(limit=limit, offset=offset)  # Use `fetch_all` method from `CrudOperations`
 
-    def bulk_add(self, records):
+    @error_reporter
+    def count_contacts(self):
         """
-        Bulk add multiple contact records in a single transaction.
-        Args:
-            records: List of dictionaries containing contact info.
-        Example:
-            [{'first_name': 'John', 'last_name': 'Doe', 'phone': '123456789', 'email': 'john@example.com'}]
+        Count the total number of contacts in the table.
         """
-        if not records:
-            return  # Return if no records
-
-        try:
-            self.contacts.db.conn.execute('BEGIN')
-
-            columns = ['first_name', 'last_name', 'phone', 'email', 'address']
-            query = f'''
-            INSERT INTO contacts ({', '.join(columns)}, created_at)
-            VALUES ({', '.join(['?' for _ in columns])}, CURRENT_TIMESTAMP)
-            '''
-
-            self.contacts.db.conn.executemany(query, [
-                (record['first_name'], record['last_name'], record['phone'], record.get('email'), record.get('address'))
-                for record in records
-            ])
-
-            self.contacts.db.conn.execute('COMMIT')
-            print(f"Successfully added {len(records)} contacts.")
-
-        except Exception as e:
-            self.contacts.db.conn.execute('ROLLBACK')
-            print(f"Error during bulk add: {e}")
+        query = f"SELECT COUNT(*) FROM {self.table}"
+        return self.fetchone(query)[0]  # Use `fetchone` from `CrudOperations`

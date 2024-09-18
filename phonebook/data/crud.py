@@ -1,31 +1,33 @@
-from phonebook.data.database import Database
+import traceback
 from phonebook.utils.schema_parser import get_table_schema
 from phonebook.utils.validators import validate_fields
+from phonebook.data.database import Database  # Now inheriting from this class
 
 
-class CrudOperations:
+class CrudOperations(Database):
     def __init__(self, table: str):
-        self.db = Database()
+        super().__init__()  # Initialize the Database class
         self.table = table
-        self.schema = get_table_schema(self.db, table)
+        self.schema = get_table_schema(self, table)  # Use inherited Database methods
 
     def transactional(func):
         """
-        Transaction decorator to manage transaction lifecycle.
+        Transaction decorator to manage transaction lifecycle with enhanced error reporting.
         """
         def wrapper(self, *args, **kwargs):
             try:
-                self.db.connect()
-                self.db.conn.execute('BEGIN TRANSACTION')
+                self.connect()  # Use inherited Database connect method
+                self.conn.execute('BEGIN TRANSACTION')
                 result = func(self, *args, **kwargs)
-                self.db.conn.commit()
+                self.conn.commit()
                 return result
             except Exception as e:
-                self.db.conn.rollback()
-                raise e
+                self.conn.rollback()
+                error_details = traceback.format_exc()  # Get full stack trace
+                raise Exception(f"Error in {func.__name__} with args {args}, kwargs {kwargs}. "
+                                f"Original error: {e}\nTraceback: {error_details}")
             finally:
-                self.db.close()
-
+                self.close()
         return wrapper
 
     @transactional
@@ -34,7 +36,7 @@ class CrudOperations:
         columns = ', '.join(fields.keys())
         placeholders = ', '.join('?' for _ in fields)
         query = f"INSERT INTO {self.table} ({columns}, created_at) VALUES ({placeholders}, CURRENT_TIMESTAMP)"
-        self.db.execute(query, tuple(fields.values()))
+        self.execute(query, tuple(fields.values()))  # Use inherited execute method
 
     @transactional
     def update(self, where, **fields):
@@ -42,23 +44,50 @@ class CrudOperations:
         set_clause = ', '.join(f"{k} = ?" for k in fields)
         where_clause = ' AND '.join(f"{k} = ?" for k in where)
         query = f"UPDATE {self.table} SET {set_clause}, updated_at = CURRENT_TIMESTAMP WHERE {where_clause}"
-        self.db.execute(query, tuple(fields.values()) + tuple(where.values()))
+        self.execute(query, tuple(fields.values()) + tuple(where.values()))
 
     @transactional
     def delete(self, **where):
         where_clause = ' AND '.join(f"{k} = ?" for k in where)
         query = f"DELETE FROM {self.table} WHERE {where_clause}"
-        self.db.execute(query, tuple(where.values()))
+        self.execute(query, tuple(where.values()))
 
     @transactional
     def bulk_add(self, records):
         if not records:
             return
-
         first_record = records[0]
         validate_fields(first_record, self.schema)
-
         columns = ', '.join(first_record.keys())
         placeholders = ', '.join('?' for _ in first_record)
         query = f"INSERT INTO {self.table} ({columns}, created_at) VALUES ({placeholders}, CURRENT_TIMESTAMP)"
-        self.db.conn.executemany(query, [tuple(record.values()) for record in records])
+        self.conn.executemany(query, [tuple(record.values()) for record in records])
+
+    def fetch_one(self, **where):
+        """
+        Fetch a single record based on the given condition(s).
+        """
+        where_clause = ' AND '.join(f"{k} = ?" for k in where)
+        query = f"SELECT * FROM {self.table} WHERE {where_clause} LIMIT 1"
+        return self.fetchone(query, tuple(where.values()))  # Use inherited fetchone method
+
+    def fetch_all(self, limit=10, offset=0, **where):
+        """
+        Fetch all records that match the given condition(s) with pagination support.
+        Args:
+            limit: Number of records to return per page.
+            offset: The starting point in the records for the current page.
+            where: Optional filtering conditions.
+
+        Returns:
+            List of matching records with pagination.
+        """
+        if where:
+            where_clause = ' AND '.join(f"{k} = ?" for k in where)
+            query = f"SELECT * FROM {self.table} WHERE {where_clause} LIMIT ? OFFSET ?"
+            params = tuple(where.values()) + (limit, offset)
+        else:
+            query = f"SELECT * FROM {self.table} LIMIT ? OFFSET ?"
+            params = (limit, offset)
+
+        return self.fetchall(query, params)  # Use inherited fetchall method
