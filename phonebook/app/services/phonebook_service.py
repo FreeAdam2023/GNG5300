@@ -2,6 +2,7 @@ import csv
 from phonebook.app.models.contact import Contacts
 from phonebook.utils.utils import error_reporter
 
+
 class PhoneBookService:
 
     def __init__(self):
@@ -9,15 +10,19 @@ class PhoneBookService:
 
     @error_reporter
     def add_contact(self, first_name, last_name, phone, email=None, address=None):
-        """Add a new contact."""
+        """Add a new contact and display the result."""
         new_data = {
-            "first_name":first_name,
-            "last_name":last_name,
-            "phone":phone,
-            "email":email,
-            "address":address
+            "first_name": first_name,
+            "last_name": last_name,
+            "phone": phone,
+            "email": email,
+            "address": address
         }
         self.contacts.add(**new_data)
+
+        # Display the newly added contact
+        print("\nNew contact added successfully:")
+        self._display_contact(new_data)
 
     @error_reporter
     def update_contact(self, phone, **fields):
@@ -32,12 +37,26 @@ class PhoneBookService:
     @error_reporter
     def search_contact(self, search_term):
         """Search contacts by name or phone number."""
-        return self.contacts.search_contact(search_term)
+        results = self.contacts.search_contact(search_term)
+        if results:
+            print("\nSearch Results:")
+            for contact in results:
+                self._display_contact(contact)
+        else:
+            print(f"No contacts found for search term: {search_term}")
+        return results
 
     @error_reporter
     def get_all_contacts(self, limit=10, offset=0):
-        """Get all contacts with pagination support."""
-        return self.contacts.get_all_contacts(limit=limit, offset=offset)
+        """Get all contacts with pagination support and display them."""
+        contacts = self.contacts.get_all_contacts(limit=limit, offset=offset)
+        if contacts:
+            print("\nAll contacts:")
+            for contact in contacts:
+                self._display_contact(contact)
+        else:
+            print("No contacts found.")
+        return contacts
 
     @error_reporter
     def bulk_add_contacts(self, records):
@@ -81,3 +100,13 @@ class PhoneBookService:
                 })
 
         return records
+
+    def _display_contact(self, contact):
+        """Helper to format and display a single contact."""
+        print(f"Name: {contact['first_name']} {contact['last_name']}")
+        print(f"Phone: {contact['phone']}")
+        if contact['email']:
+            print(f"Email: {contact['email']}")
+        if contact['address']:
+            print(f"Address: {contact['address']}")
+        print("-" * 40)  # Separator for visual clarity

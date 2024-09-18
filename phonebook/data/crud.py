@@ -2,13 +2,14 @@ import traceback
 from phonebook.utils.schema_parser import get_table_schema
 from phonebook.utils.validators import validate_fields
 from phonebook.data.database import Database  # Now inheriting from this class
-
+import sqlite3  # Assuming you're using sqlite3
 
 class CrudOperations(Database):
     def __init__(self, table: str):
         super().__init__()  # Initialize the Database class
         self.table = table
         self.schema = get_table_schema(self, table)  # Use inherited Database methods
+        self.conn.row_factory = sqlite3.Row  # Set the row factory to return dictionaries
 
     def transactional(func):
         """
@@ -66,10 +67,12 @@ class CrudOperations(Database):
     def fetch_one(self, **where):
         """
         Fetch a single record based on the given condition(s).
+        Returns a dictionary.
         """
         where_clause = ' AND '.join(f"{k} = ?" for k in where)
         query = f"SELECT * FROM {self.table} WHERE {where_clause} LIMIT 1"
-        return self.fetchone(query, tuple(where.values()))  # Use inherited fetchone method
+        row = self.fetchone(query, tuple(where.values()))
+        return dict(row) if row else None  # Return the row as a dictionary
 
     def fetch_all(self, limit=10, offset=0, **where):
         """
@@ -80,7 +83,7 @@ class CrudOperations(Database):
             where: Optional filtering conditions.
 
         Returns:
-            List of matching records with pagination.
+            List of dictionaries with pagination.
         """
         if where:
             where_clause = ' AND '.join(f"{k} = ?" for k in where)
@@ -90,4 +93,5 @@ class CrudOperations(Database):
             query = f"SELECT * FROM {self.table} LIMIT ? OFFSET ?"
             params = (limit, offset)
 
-        return self.fetchall(query, params)  # Use inherited fetchall method
+        rows = self.fetchall(query, params)
+        return [dict(row) for row in rows] if rows else []  # Return list of dictionaries
