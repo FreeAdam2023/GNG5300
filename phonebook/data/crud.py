@@ -1,18 +1,20 @@
-from data.database import Database
-from utils.schema_parser import get_table_schema
-from utils.validators import validate_fields
+from phonebook.data.database import Database
+from phonebook.utils.schema_parser import get_table_schema
+from phonebook.utils.validators import validate_fields
+
 
 class CrudOperations:
-    def __init__(self, db: Database, table: str):
+    def __init__(self, table: str):
         # Initialize with database instance and table name
-        self.db = db
+        self.db = Database()
         self.table = table
-        self.schema = get_table_schema(db, table)  # Get table schema for validation
+        self.schema = get_table_schema(self.db, table)  # Get table schema for validation
 
     def transactional(self, func):
         """
         Transaction decorator to manage transaction lifecycle.
         """
+
         def wrapper(*args, **kwargs):
             try:
                 self.db.connect()  # Ensure the database is connected
@@ -25,6 +27,7 @@ class CrudOperations:
                 raise e  # Re-raise exception
             finally:
                 self.db.close()  # Close the connection after operation
+
         return wrapper
 
     @transactional

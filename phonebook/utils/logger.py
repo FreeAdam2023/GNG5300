@@ -4,6 +4,7 @@
 """
 import logging
 
+
 def setup_logger(name, log_file, level=logging.INFO):
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
     handler = logging.FileHandler(log_file)
@@ -14,6 +15,7 @@ def setup_logger(name, log_file, level=logging.INFO):
     logger.addHandler(handler)
 
     return logger
+
 
 # Application log
 app_logger = setup_logger('app_logger', 'logs/app.log')

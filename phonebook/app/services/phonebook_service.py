@@ -1,11 +1,12 @@
 import csv
 
-from app.models.contact import Contacts
+from phonebook.app.models.contact import Contacts
+
 
 class PhoneBookService:
 
-    def __init__(self, db):
-        self.contacts = Contacts(db)
+    def __init__(self):
+        self.contacts = Contacts()
 
     def add_contact(self, first_name, last_name, phone, email=None, address=None):
         """Add a new contact."""

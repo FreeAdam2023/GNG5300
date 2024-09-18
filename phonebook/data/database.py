@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class Database:
     def __init__(self, db_name='phonebook.db'):
         self.db_name = db_name

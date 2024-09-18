@@ -1,9 +1,10 @@
-from data.crud import CrudOperations
+from phonebook.data.crud import CrudOperations
+
 
 class Contacts:
 
-    def __init__(self, db):
-        self.contacts = CrudOperations(db, 'contacts')
+    def __init__(self):
+        self.contacts = CrudOperations('contacts')
         self.create_contacts_table()
 
     def create_contacts_table(self):
@@ -94,4 +95,3 @@ class Contacts:
         except Exception as e:
             self.contacts.db.conn.execute('ROLLBACK')
             print(f"Error during bulk add: {e}")
-
