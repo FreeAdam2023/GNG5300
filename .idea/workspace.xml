@@ -5,7 +5,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71208ea2-266c-49e9-a63a-90f2b7e39b46" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/my_tennis_club/members/templates/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my_tennis_club/members/templates/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my_tennis_club/members/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my_tennis_club/templates/base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/blog/about.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/blog/blog-details.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/blog/blog-image1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/blog/blog-image2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/blog/blog-image3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/blog/hero-image.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/blog/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/blog/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/blog/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/session3/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/app/models/contact.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/app/services/phonebook_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/data/crud.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/data/database.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/phonebook.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/tests/test_data/contacts.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/tests/test_phonebook_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/utils/logger.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/utils/schema_parser.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/utils/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phonebook/utils/validators.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +46,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -25,9 +56,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2m2QvxjCuooT44paewKRI8dqYXp" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -38,10 +69,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/adamlyu/PycharmProjects/GNG5300/my_tennis_club/members/templates",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -49,6 +82,47 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/my_tennis_club/members/templates" />
+      <recent name="$PROJECT_DIR$/session3/blog" />
+      <recent name="$PROJECT_DIR$/phonebook" />
+      <recent name="$PROJECT_DIR$/phonebook/tests/test_data" />
+      <recent name="$PROJECT_DIR$/phonebook/tests" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/my_tennis_club/templates" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GNG5300" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/phonebook" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/phonebook/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -57,11 +131,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1726272426140</updated>
-      <workItem from="1726272427175" duration="6934000" />
+      <workItem from="1726272427175" duration="19773000" />
+      <workItem from="1726874590133" duration="7563000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/GNG5300$main.coverage" NAME="main Coverage Results" MODIFIED="1726630083575" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/phonebook" />
   </component>
 </project>
